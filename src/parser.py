@@ -1,0 +1,105 @@
+import sys
+from tok import Tok;
+from tok_type import TokType;
+
+from nodes.number import NumberNode
+from nodes.add import AddNode
+from nodes.subtract import SubtractNode
+from nodes.print import PrintNode
+from nodes.string import StringNode
+
+class Parser:
+    def __init__(self, tokens):
+        self.variables = set()
+
+        self.tokens = tokens
+        self.tokens_size = len(tokens)
+        self.curr_pos = -1
+        self.current_tok = None
+        self.peek_tok = None
+
+        self.advance()
+        self.advance()
+        
+    def abort(self, message):
+        sys.exit(f"[Luna parsing error]: {message}")
+
+    def check(self, type):
+        return type == self.current_tok.type
+
+    def check_peek(self, type):
+        return type == self.peek_tok.type
+
+    def match(self, type):
+        if not self.check(type):
+            self.abort(f"Expected {type}, got {self.current_tok.type}")
+
+    def advance(self):
+        self.curr_pos += 1
+
+        if self.curr_pos >= self.tokens_size:
+            self.current_tok = self.peek_tok
+            self.peek_tok = Tok(TokType.EOF, None)
+        else:
+            self.current_tok = self.peek_tok
+            self.peek_tok = self.tokens[self.curr_pos]
+
+    def newline(self):
+        while self.check(TokType.NEWLINE):
+            self.advance()
+
+    def program(self):
+        ast = []
+        while self.check(TokType.NEWLINE):
+            self.advance()
+
+        while not self.check(TokType.EOF):
+            ast.append(self.statement())
+        
+        return ast
+
+    def statement(self):
+        result = self.expression()
+
+        if self.current_tok.type == TokType.PRINT:
+            self.advance()
+            result = PrintNode(self.expression())
+        
+        self.newline()
+        return result
+
+    def expression(self):
+        result = self.term()
+
+        if self.current_tok.type == TokType.PLUS:
+            self.advance()
+            result = AddNode(result, self.factor())
+
+        if self.current_tok.type == TokType.MINUS:
+            self.advance()
+            result = SubtractNode(result, self.factor())
+            
+        return result
+
+    def term(self):
+        result = self.factor()
+
+        return result
+
+    def factor(self):
+        token = self.current_tok
+
+        if token.type == TokType.LEFT_PAREN:
+            self.advance()
+            result = self.statement()
+            self.match(TokType.RIGHT_PAREN)
+            self.advance()
+            return result
+
+        if token.type == TokType.NUMBER:
+            self.advance()
+            return NumberNode(token.value)
+        
+        if token.type == TokType.STRING:
+            self.advance()
+            return StringNode(token.value)

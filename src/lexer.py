@@ -25,6 +25,38 @@ class Lexer:
         while self.curr_char == ' ' or self.curr_char == '\t':
             self.advance()
 
+    def gen_string_token(self):
+        string = ""
+        self.advance()
+        while self.curr_char != "\"":
+            string += self.curr_char
+            self.advance()
+        
+        return Tok(TokType.STRING, string)
+
+    def gen_number_token(self):
+        start_pos = self.curr_pos
+        while self.peek().isdigit():
+            self.advance()
+
+        number = self.src[start_pos : self.curr_pos + 1]
+        return Tok(TokType.NUMBER, number)
+
+    def gen_alpha_token(self):
+        start_pos = self.curr_pos
+        while self.peek().isalnum():
+            self.advance()
+
+        value = self.src[start_pos : self.curr_pos + 1]
+        keyword = self.check_keyword(value)
+        return Tok(keyword, value)
+
+    def check_keyword(self, value):
+        for token in TokType:
+            if token.name.lower() == value:
+                return token
+        return TokType.IDENTIFIER
+
     def generate_tokens(self):
         tokens = []
 
@@ -54,18 +86,18 @@ class Lexer:
                 token = Tok(TokType.DIVIDE, '/')
 
             elif self.curr_char == '\"':
-                pass
+                token = self.gen_string_token()
 
             elif self.curr_char.isdigit():
-                pass
+                token = self.gen_number_token()
 
             elif self.curr_char.isalpha():
-                pass
+                token = self.gen_alpha_token()
 
             elif self.curr_char == '\n':
                 token = Tok(TokType.NEWLINE, '\n')
 
             self.advance()
             tokens.append(token)
-
+            
         return tokens
