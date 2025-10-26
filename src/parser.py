@@ -7,6 +7,7 @@ from nodes.add import AddNode
 from nodes.subtract import SubtractNode
 from nodes.print import PrintNode
 from nodes.string import StringNode
+from nodes.variable import VariableNode
 
 class Parser:
     def __init__(self, tokens):
@@ -64,6 +65,17 @@ class Parser:
         if self.current_tok.type == TokType.PRINT:
             self.advance()
             result = PrintNode(self.expression())
+
+        if self.current_tok.type == TokType.IDENTIFIER:
+            if self.check_peek(TokType.EQUALS):
+                name = self.current_tok.value
+                self.advance()
+                result = VariableNode(name, self.statement())
+                self.variables.add(result)
+
+        if self.current_tok.type == TokType.EQUALS:
+            self.advance()
+            result = self.expression()
         
         self.newline()
         return result
@@ -103,3 +115,9 @@ class Parser:
         if token.type == TokType.STRING:
             self.advance()
             return StringNode(token.value)
+        
+        if token.type == TokType.IDENTIFIER:
+            for var in self.variables:
+                if var.name == token.value:
+                    self.advance()
+                    return VariableNode(var.name, var.value)

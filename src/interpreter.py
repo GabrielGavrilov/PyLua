@@ -3,6 +3,7 @@ from nodes.add import AddNode
 from nodes.subtract import SubtractNode
 from nodes.print import PrintNode
 from nodes.string import StringNode
+from nodes.variable import VariableNode
 
 class Interpreter:
     def __init__(self, ast):
@@ -23,5 +24,8 @@ class Interpreter:
         if isinstance(node, SubtractNode):
             return self.eval(node.left) - self.eval(node.right)
         
+        if isinstance(node, VariableNode):
+            return self.eval(node.value)
+
         if isinstance(node, PrintNode):
             print(self.eval(node.value))
