@@ -6,6 +6,13 @@ class TokType(Enum):
 
     # Keywords
     PRINT = 100
+    IF = 101
+    THEN = 102
+    END = 103
+    TRUE = 104
+    FALSE = 105
+    ELSE = 106
+    ELSEIF = 107
 
     # Operators
     LEFT_PAREN = 200
@@ -17,6 +24,8 @@ class TokType(Enum):
     MINUS = 301
     MULTIPLY = 302
     DIVIDE = 303
+    GT = 304
+    LT = 305
 
     # Data types
     IDENTIFIER = 400

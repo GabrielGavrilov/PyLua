@@ -10,7 +10,7 @@ if __name__ == "__main__":
     with open(sys.argv[1]) as f:
         src = f.read()
 
-    # src = "print(\"Hello, World!\")"
+    # src = "false"
 
     lex = Lexer(src)
     tokens = lex.generate_tokens()

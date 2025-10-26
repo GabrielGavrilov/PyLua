@@ -85,6 +85,12 @@ class Lexer:
             elif self.curr_char == '/':
                 token = Tok(TokType.DIVIDE, '/')
 
+            elif self.curr_char == '>':
+                token = Tok(TokType.GT, '>')
+
+            elif self.curr_char == '<':
+                token = Tok(TokType.LT, '<')
+
             elif self.curr_char == '\"':
                 token = self.gen_string_token()
 

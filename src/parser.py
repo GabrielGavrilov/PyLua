@@ -8,6 +8,9 @@ from nodes.subtract import SubtractNode
 from nodes.print import PrintNode
 from nodes.string import StringNode
 from nodes.variable import VariableNode
+from nodes.boolean import BooleanNode
+from nodes.conditional import ConditionalNode
+from nodes.comparitor import Comparitors, ComparitorNode
 
 class Parser:
     def __init__(self, tokens):
@@ -76,12 +79,52 @@ class Parser:
         if self.current_tok.type == TokType.EQUALS:
             self.advance()
             result = self.expression()
+
+        if self.current_tok.type == TokType.IF:
+            self.advance()
+            condition = self.statement()
+            statements = []
+            elseif_statements = []
+            else_statements = []
+
+            while not self.check(TokType.END) and not self.check(TokType.ELSEIF) and not self.check(TokType.ELSE):
+                statements.append(self.statement())
+
+            if self.check(TokType.ELSEIF):
+                while not self.check(TokType.END) and not self.check(TokType.ELSE):
+                    self.advance()
+                    elseif_condition = self.statement()
+                    statements = []
+
+                    while not self.check(TokType.END) and not self.check(TokType.ELSEIF) and not self.check(TokType.ELSE):
+                        statements.append(self.statement())
+                    
+                    elseif_statements.append(ConditionalNode(elseif_condition, statements))
+
+            if self.check(TokType.ELSE):
+                self.advance()
+                self.advance()
+                while not self.check(TokType.END):
+                    else_statements.append(self.statement())
+
+            self.advance()
+            result = ConditionalNode(condition, statements, elseif_statements if len(elseif_statements) > 0 else None, else_statements if len(else_statements) > 0 else None)
+
+        if self.current_tok.type == TokType.ELSE:
+            self.advance()
+
+        if self.current_tok.type == TokType.THEN:
+            self.advance()
         
         self.newline()
         return result
 
     def expression(self):
         result = self.term()
+
+        if self.current_tok.type == TokType.GT:
+            self.advance()
+            result = ComparitorNode(result, Comparitors.GREATER_THAN, self.factor())
 
         if self.current_tok.type == TokType.PLUS:
             self.advance()
@@ -116,8 +159,13 @@ class Parser:
             self.advance()
             return StringNode(token.value)
         
+        if token.type == TokType.TRUE or token.type == TokType.FALSE:
+            self.advance()
+            return BooleanNode(token.value)
+
         if token.type == TokType.IDENTIFIER:
             for var in self.variables:
                 if var.name == token.value:
                     self.advance()
                     return VariableNode(var.name, var.value)
+                
