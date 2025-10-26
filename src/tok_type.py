@@ -13,6 +13,7 @@ class TokType(Enum):
     FALSE = 105
     ELSE = 106
     ELSEIF = 107
+    FUNCTION = 108
 
     # Operators
     LEFT_PAREN = 200

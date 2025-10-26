@@ -7,6 +7,7 @@ from nodes.variable import VariableNode
 from nodes.conditional import ConditionalNode
 from nodes.comparitor import ComparitorNode, Comparitors
 from nodes.boolean import BooleanNode
+from nodes.function import FunctionNode
 
 class Interpreter:
     def __init__(self, ast):
@@ -54,3 +55,7 @@ class Interpreter:
                 if node.else_statement:
                     for else_statement in node.else_statement:
                         self.eval(else_statement)
+
+        if isinstance(node, FunctionNode):
+            for statement in node.statement:
+                self.eval(statement)

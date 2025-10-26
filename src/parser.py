@@ -11,10 +11,12 @@ from nodes.variable import VariableNode
 from nodes.boolean import BooleanNode
 from nodes.conditional import ConditionalNode
 from nodes.comparitor import Comparitors, ComparitorNode
+from nodes.function import FunctionNode
 
 class Parser:
     def __init__(self, tokens):
         self.variables = set()
+        self.functions = set()
 
         self.tokens = tokens
         self.tokens_size = len(tokens)
@@ -75,6 +77,25 @@ class Parser:
                 self.advance()
                 result = VariableNode(name, self.statement())
                 self.variables.add(result)
+
+        if self.current_tok.type == TokType.FUNCTION:
+            self.advance()
+            # functio name
+            statements = []
+            name = self.current_tok.value
+        
+            self.advance()
+            # skip () for now
+            self.advance()
+            self.advance()
+            # skip newline
+            self.advance()
+
+            while not self.check(TokType.END):
+                statements.append(self.statement())
+
+            self.advance()
+            self.functions.add(FunctionNode(name, statements))
 
         if self.current_tok.type == TokType.EQUALS:
             self.advance()
@@ -168,4 +189,8 @@ class Parser:
                 if var.name == token.value:
                     self.advance()
                     return VariableNode(var.name, var.value)
+            for func in self.functions:
+                if func.name == token.value:
+                    self.advance()
+                    return FunctionNode(func.name, func.statement)
                 
