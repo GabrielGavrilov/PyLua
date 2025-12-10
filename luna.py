@@ -1,0 +1,18 @@
+import sys
+from v2.scanner import Scanner
+from v2.token import TokenType
+from v2.parser import Parser
+
+if __name__ == "__main__":
+
+    # with open(sys.argv[1]) as f:
+    #     src = f.read()
+
+    src = "print(3 + 3)"
+
+    scanner = Scanner(src)
+    parser = Parser(scanner.scan())
+
+    ast = parser.parse()
+
+    print(ast)
