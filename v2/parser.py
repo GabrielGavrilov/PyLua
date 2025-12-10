@@ -47,14 +47,31 @@ class Parser:
         if self.check(type):
             return self.advance()
         self.abort(f"Expected {type} but got {self.peek().type}")
+
+    def consume_newline(self):
+        while self.check(TokenType.NEWLINE):
+            self.advance()
     
     def print_statement(self):
         self.consume(TokenType.LEFT_PAREN)
         expr = self.expression()
         self.consume(TokenType.RIGHT_PAREN)
         return Print(expr)
+    
+    def local_declaration(self):
+        name = self.consume(TokenType.IDENTIFIER)
+
+        initializer = None
+        if self.match(TokenType.EQUAL):
+            initializer = self.expression()
+
+        return VariableStatement(name, initializer)
 
     def declaration(self):
+        if self.match(TokenType.LOCAL):
+            return self.local_declaration()
+
+        self.consume_newline()
         return self.statement()
     
     def statement(self):
@@ -83,3 +100,6 @@ class Parser:
     def primary(self):
         if self.match(TokenType.NUMBER) or self.match(TokenType.STRING):
             return Literal(self.previous().value)
+        
+        if self.match(TokenType.IDENTIFIER):
+            return VariableExpression(self.previous())

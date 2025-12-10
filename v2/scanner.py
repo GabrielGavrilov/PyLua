@@ -73,7 +73,7 @@ class Scanner:
                 token = Token(TokenType.RIGHT_PAREN, ')')
 
             elif self.curr_char == '=':
-                token = Token(TokenType.EQUALS, '=')
+                token = Token(TokenType.EQUAL, '=')
 
             elif self.curr_char == '+':
                 token = Token(TokenType.PLUS, '+')

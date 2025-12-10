@@ -8,7 +8,7 @@ if __name__ == "__main__":
     # with open(sys.argv[1]) as f:
     #     src = f.read()
 
-    src = "print(3 + 3)"
+    src = "local age = 23\nprint(age)"
 
     scanner = Scanner(src)
     parser = Parser(scanner.scan())

@@ -6,7 +6,7 @@ class TokenType(Enum):
 
     LEFT_PAREN = auto(),
     RIGHT_PAREN = auto(),
-    EQUALS = auto(),
+    EQUAL = auto(),
     GT = auto(),
     LT = auto(),
 
@@ -19,6 +19,7 @@ class TokenType(Enum):
     STRING = auto(),
     NUMBER = auto(),
 
+    LOCAL = auto()
     PRINT = auto()
 
 class Token: 

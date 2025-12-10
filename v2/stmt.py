@@ -11,3 +11,11 @@ class Print:
 
     def __repr__(self):
         return f"(PRINT {self.expr})"
+    
+class VariableStatement:
+    def __init__(self, name, initializer):
+        self.name = name
+        self.initializer = initializer
+
+    def __repr__(self):
+        return f"(VARIABLE STATEMENT {self.name.value} {self.initializer})"

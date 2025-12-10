@@ -15,3 +15,10 @@ class Binary:
 
     def __repr__(self):
         return f"(BINARY {self.left} {self.operator.type} {self.right})"
+    
+class VariableExpression:
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return f"(VARIABLE EXPR {self.name.value})"
