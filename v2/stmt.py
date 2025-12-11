@@ -9,6 +9,10 @@ class StmtVisitor(ABC):
     def visit_print_stmt(self, expr):
         pass
 
+    @abstractmethod
+    def visit_variable_stmt(self, name, initializer):
+        pass
+
 class Stmt(ABC):
     @abstractmethod
     def accept(self, visitor):
@@ -22,7 +26,7 @@ class Expression(Stmt):
         return visitor.visit_expression_stmt(self)
 
     def __repr__(self):
-        return f"(EXPRESSION {self.value})"
+        return f"(EXPRESSION {self.expr})"
     
 class Print(Stmt):
     def __init__(self, expr):
@@ -34,10 +38,13 @@ class Print(Stmt):
     def __repr__(self):
         return f"(PRINT {self.expr})"
     
-class VariableStatement:
+class VariableStatement(Stmt):
     def __init__(self, name, initializer):
         self.name = name
         self.initializer = initializer
+
+    def accept(self, visitor):
+        return visitor.visit_variable_stmt(self)
 
     def __repr__(self):
         return f"(VARIABLE STATEMENT {self.name.value} {self.initializer})"

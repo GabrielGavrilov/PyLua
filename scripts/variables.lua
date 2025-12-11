@@ -1,6 +1,6 @@
-a = 1
-b = 2
-c = a + b
-phrase = "Hello, World!"
+local a = 1
+local b = 2
+local c = a + b
+local phrase = "Hello, World!"
 print(c)
 print(phrase)

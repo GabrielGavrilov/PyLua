@@ -12,6 +12,7 @@ class Parser:
 
     def parse(self):
         while not self.is_at_end():
+            self.consume_newline()
             self.statements.append(self.declaration())
         return self.statements
 
@@ -71,7 +72,6 @@ class Parser:
         if self.match(TokenType.LOCAL):
             return self.local_declaration()
 
-        self.consume_newline()
         return self.statement()
     
     def statement(self):
