@@ -1,9 +1,23 @@
+from abc import ABC, abstractmethod
 from .token import Token
 
-class Literal:
-    def __init__(self, value: any):
+class ExprVisitor(ABC):
+    @abstractmethod
+    def visit_literal_expr(self, expr):
+        pass
+
+class Expr(ABC):
+    @abstractmethod
+    def accept(self, visitor):
+        pass
+
+class Literal(Expr):
+    def __init__(self, value):
         self.value = value
 
+    def accept(self, visitor):
+        return visitor.visit_literal_expr(self)
+    
     def __repr__(self):
         return f"(LITERAL {self.value})"
 
