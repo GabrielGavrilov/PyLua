@@ -40,7 +40,7 @@ class Scanner:
             self.advance()
 
         number = self.src[start_pos : self.curr_pos + 1]
-        return Token(TokenType.NUMBER, number)
+        return Token(TokenType.NUMBER, int(number))
     
     def scan_alpha(self):
         start_pos = self.curr_pos

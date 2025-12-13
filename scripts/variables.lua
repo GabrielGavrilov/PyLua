@@ -1,6 +1,7 @@
-local a = 1
-local b = 2
-local c = a + b
 local phrase = "Hello, World!"
-print(c)
+local a = 5
+local b = 8
+local c = a + b
+
 print(phrase)
+print(c)

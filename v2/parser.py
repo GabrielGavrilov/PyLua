@@ -59,6 +59,17 @@ class Parser:
         self.consume(TokenType.RIGHT_PAREN)
         return Print(expr)
     
+    def if_statement(self):
+        condition = self.expression()
+        self.consume(TokenType.THEN)
+        then_branch = self.statement()
+        else_branch = None
+
+        self.consume(TokenType.END)
+
+        return IfStatement(condition, then_branch, else_branch)
+
+    
     def local_declaration(self):
         name = self.consume(TokenType.IDENTIFIER)
 
@@ -77,6 +88,9 @@ class Parser:
     def statement(self):
         if self.match(TokenType.PRINT):
             return self.print_statement()
+        
+        if self.match(TokenType.IF):
+            return self.if_statement()
 
         return self.expression_statement()
     
@@ -85,12 +99,39 @@ class Parser:
         return Expression(expr)
 
     def expression(self):
-        return self.term()
+        return self.assignment()
+    
+    def assignment(self):
+        return self.or_assignment()
+
+    def or_assignment(self):
+        return self.and_assignment()
+
+    def and_assignment(self):
+        return self.equality()
+
+    def equality(self):
+        return self.comparison()
+
+    def comparison(self):
+        expr = self.term()
+
+        if self.match(TokenType.GT):
+            operator = self.previous()
+            right = self.term()
+            expr = Binary(expr, operator, right)
+
+        return expr
     
     def term(self):
         expr = self.primary()
 
         if self.match(TokenType.PLUS):
+            operator = self.previous()
+            right = self.primary()
+            expr = Binary(expr, operator, right)
+
+        if self.match(TokenType.MINUS):
             operator = self.previous()
             right = self.primary()
             expr = Binary(expr, operator, right)

@@ -23,6 +23,8 @@ class Interpreter:
         left = self.evaluate(expr.left)
         right = self.evaluate(expr.right)
 
+        if expr.operator.type is TokenType.MINUS:
+            return left - right
         if expr.operator.type is TokenType.PLUS:
             return left + right
     

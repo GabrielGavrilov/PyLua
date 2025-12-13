@@ -6,16 +6,16 @@ from v2.interpreter import Interpreter
 
 if __name__ == "__main__":
 
-    with open(sys.argv[1]) as f:
-        src = f.read()
+    # with open(sys.argv[1]) as f:
+    #     src = f.read()
 
-    # src = "local a = 8\nprint(a)"
+    src = "if 6 > 3 then\nprint(\"OK!\")\nend"
 
     scanner = Scanner(src)
     parser = Parser(scanner.scan())
 
     ast = parser.parse()
-    # print(ast)
-    interpeter = Interpreter()
+    print(ast)
+    # interpeter = Interpreter()
 
-    interpeter.interpret(ast)
+    # interpeter.interpret(ast)

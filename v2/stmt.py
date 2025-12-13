@@ -13,6 +13,10 @@ class StmtVisitor(ABC):
     def visit_variable_stmt(self, name, initializer):
         pass
 
+    @abstractmethod
+    def visit_if_stmt(self, condition, then_branch, else_branch):
+        pass
+
 class Stmt(ABC):
     @abstractmethod
     def accept(self, visitor):
@@ -48,3 +52,17 @@ class VariableStatement(Stmt):
 
     def __repr__(self):
         return f"(VARIABLE STATEMENT {self.name.value} {self.initializer})"
+    
+class IfStatement(Stmt):
+    def __init__(self, condition, then_branch, else_branch):
+        self.condition = condition
+        self.then_branch = then_branch
+        self.else_branch = else_branch
+
+    def accept(self, visitor):
+        return visitor.visit_if_stmt(self)
+    
+    def __repr__(self):
+        return f"(IF STATEMENT {self.condition} THEN {self.then_branch} ELSE {self.else_branch})"
+
+    

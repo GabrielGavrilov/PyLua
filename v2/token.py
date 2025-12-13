@@ -7,6 +7,7 @@ class TokenType(Enum):
     LEFT_PAREN = auto(),
     RIGHT_PAREN = auto(),
     EQUAL = auto(),
+    EQUAL_EQUAL = auto()
     GT = auto(),
     LT = auto(),
 
@@ -21,6 +22,10 @@ class TokenType(Enum):
 
     LOCAL = auto()
     PRINT = auto()
+    IF = auto()
+    THEN = auto()
+    ELSE = auto()
+    END = auto()
 
 class Token: 
     def __init__(self, type, value):
