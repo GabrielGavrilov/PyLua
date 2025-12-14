@@ -26,6 +26,7 @@ class TokenType(Enum):
     THEN = auto()
     ELSE = auto()
     END = auto()
+    FUNCTION = auto()
 
 class Token: 
     def __init__(self, type, value):

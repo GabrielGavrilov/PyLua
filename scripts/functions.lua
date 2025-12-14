@@ -1,8 +1,5 @@
-function sayHello()
-    age = 19
-    if age > 18 then
-        print("You are over eighteen!")
-    end
+function hello()
+    print("Hello, World!")
 end
 
-sayHello
+hello()

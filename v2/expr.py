@@ -14,6 +14,10 @@ class ExprVisitor(ABC):
     def visit_variable_expr(self, name):
         pass
 
+    @abstractmethod
+    def visit_call_expr(self, expr):
+        pass
+
 class Expr(ABC):
     @abstractmethod
     def accept(self, visitor):
@@ -50,3 +54,15 @@ class VariableExpression(Expr):
 
     def __repr__(self):
         return f"(VARIABLE EXPR {self.name.value})"
+    
+class CallExpression(Expr):
+    def __init__(self, callee, paren, arguments):
+        self.callee = callee
+        self.paren = paren
+        self.arguments = arguments
+
+    def accept(self, visitor):
+        return visitor.visit_call_expr(self)
+    
+    def __repr__(self):
+        return f"(CALL EXPR {self.callee} PAREN {self.paren} ARGUMENTS {self.arguments})"

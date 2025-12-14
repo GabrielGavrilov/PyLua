@@ -12,7 +12,6 @@ class Parser:
 
     def parse(self):
         while not self.is_at_end():
-            self.consume_newline()
             self.statements.append(self.declaration())
         return self.statements
 
@@ -65,8 +64,10 @@ class Parser:
         then_branch = self.statement()
         else_branch = None
 
-        self.consume(TokenType.END)
+        if self.match(TokenType.ELSE):
+            else_branch = self.statement()
 
+        self.consume(TokenType.END)
         return IfStatement(condition, then_branch, else_branch)
 
     
@@ -79,9 +80,30 @@ class Parser:
 
         return VariableStatement(name, initializer)
 
+    def function_declaration(self):
+        name = self.consume(TokenType.IDENTIFIER)
+        self.consume(TokenType.LEFT_PAREN)
+        params = []
+
+        self.consume(TokenType.RIGHT_PAREN)
+        body = self.block_statements()
+        return FunctionStatement(name, params, body)
+
+    def block_statements(self):
+        statements = []
+
+        while not self.check(TokenType.END) and not self.is_at_end():
+            statements.append(self.declaration())
+
+        self.consume(TokenType.END)
+        return statements
+
     def declaration(self):
         if self.match(TokenType.LOCAL):
             return self.local_declaration()
+        
+        if self.match(TokenType.FUNCTION):
+            return self.function_declaration()
 
         return self.statement()
     
@@ -124,7 +146,7 @@ class Parser:
         return expr
     
     def term(self):
-        expr = self.primary()
+        expr = self.call()
 
         if self.match(TokenType.PLUS):
             operator = self.previous()
@@ -135,6 +157,24 @@ class Parser:
             operator = self.previous()
             right = self.primary()
             expr = Binary(expr, operator, right)
+
+        return expr
+    
+    def finish_call(self, callee):
+        arguments = []
+
+        paren = self.consume(TokenType.RIGHT_PAREN)
+
+        return CallExpression(callee, paren, arguments)
+
+    def call(self):
+        expr = self.primary()
+
+        while True:
+            if self.match(TokenType.LEFT_PAREN):
+                expr = self.finish_call(expr)
+            else:
+                break
 
         return expr
 

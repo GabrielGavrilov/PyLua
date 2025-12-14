@@ -14,7 +14,11 @@ class StmtVisitor(ABC):
         pass
 
     @abstractmethod
-    def visit_if_stmt(self, condition, then_branch, else_branch):
+    def visit_if_stmt(self, expr):
+        pass
+
+    @abstractmethod
+    def visit_function_stmt(self, expr):
         pass
 
 class Stmt(ABC):
@@ -65,4 +69,14 @@ class IfStatement(Stmt):
     def __repr__(self):
         return f"(IF STATEMENT {self.condition} THEN {self.then_branch} ELSE {self.else_branch})"
 
-    
+class FunctionStatement(Stmt):
+    def __init__(self, name, params = [], body = []):
+        self.name = name
+        self.params = params
+        self.body = body
+
+    def accept(self, visitor):
+        return visitor.visit_function_stmt(self)
+
+    def __repr__(self):
+        return f"(FUNCTION STATEMENT {self.name.value} PARAMS {self.params} BODY {self.body})"

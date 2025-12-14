@@ -64,7 +64,8 @@ class Scanner:
             self.skip_whitespace()
 
             if self.curr_char == '\n':
-                token = Token(TokenType.NEWLINE, '\n')
+                self.advance()
+                continue
 
             elif self.curr_char == '(':
                 token = Token(TokenType.LEFT_PAREN, '(')
