@@ -16,7 +16,7 @@ class Interpreter:
         stmt.accept(self)
 
     def resolve(self, expr, depth):
-        self.locals.put(expr, depth)
+        self.locals[expr] = depth
 
     def interpret(self, stmts):
         for stmt in stmts:
@@ -63,8 +63,7 @@ class Interpreter:
         if (stmt.initializer is not None):
             value = self.evaluate(stmt.initializer)
 
-        self.locals[stmt.name.value] = value
-
+        self.environment.define(stmt.name.value, value)
         return None
 
     def visit_if_stmt(self, stmt):

@@ -3,6 +3,7 @@ from v2.scanner import Scanner
 from v2.token import TokenType
 from v2.parser import Parser
 from v2.interpreter import Interpreter
+from v2.resolver import Resolver
 
 if __name__ == "__main__":
 
@@ -14,6 +15,9 @@ if __name__ == "__main__":
 
     ast = parser.parse()
     print(ast)
-    
-    # interpeter = Interpreter()
-    # interpeter.interpret(ast)
+
+    interpeter = Interpreter()
+    resolver = Resolver(interpeter)
+
+    resolver.resolve(ast)
+    interpeter.interpret(ast)
