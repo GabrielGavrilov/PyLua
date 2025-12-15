@@ -15,6 +15,16 @@ class Interpreter:
     def execute(self, stmt):
         stmt.accept(self)
 
+    def execute_block(self, statements, environment):
+        previous = self.environment
+        try:
+            self.environment = environment
+            
+            for stmt in statements:
+                self.execute(stmt)
+        finally:
+            self.environment = previous
+
     def resolve(self, expr, depth):
         self.locals[expr] = depth
 
@@ -73,3 +83,7 @@ class Interpreter:
             self.execute(stmt.else_branch)
 
         return None
+    
+    def visit_block_stmt(self, stmt):
+        self.execute_block(stmt.statements, Environment(self.environment))
+        None

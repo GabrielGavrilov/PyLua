@@ -17,10 +17,10 @@ class Environment:
         return environment
     
     def get_at(self, distance, name):
-        return self.ancestor(distance)[name]
+        return self.ancestor(distance).values[name]
     
     def assign_at(self, distance, name, value):
-        self.ancestor(distance)[name.value] = value
+        self.ancestor(distance).values[name.value] = value
 
     def get(self, name):
         if name.value in self.values:
@@ -32,7 +32,7 @@ class Environment:
         sys.exit(f"[Runtime error]: Undefined variable {name.value}")
 
     def assign(self, name, value):
-        if name in self.value:
+        if name.value in self.values:
             self.values[name.value] = value
             return
         

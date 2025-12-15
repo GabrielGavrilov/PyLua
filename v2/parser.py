@@ -37,6 +37,9 @@ class Parser:
             return False
         return self.peek().type == type
 
+    def check_any(self, types):
+        return any(self.check(t) for t in types)
+
     def match(self, type: TokenType) -> bool:
         if self.check(type):
             self.advance()
@@ -61,11 +64,11 @@ class Parser:
     def if_statement(self):
         condition = self.expression()
         self.consume(TokenType.THEN)
-        then_branch = self.statement()
+        then_branch = self.block_statements([TokenType.ELSE, TokenType.END])
         else_branch = None
 
         if self.match(TokenType.ELSE):
-            else_branch = self.statement()
+            else_branch = self.block_statements([TokenType.END])
 
         self.consume(TokenType.END)
         return IfStatement(condition, then_branch, else_branch)
@@ -89,14 +92,14 @@ class Parser:
         body = self.block_statements()
         return FunctionStatement(name, params, body)
 
-    def block_statements(self):
+    def block_statements(self, terminators):
         statements = []
 
-        while not self.check(TokenType.END) and not self.is_at_end():
+        while not self.is_at_end() and not self.check_any(terminators):
             statements.append(self.declaration())
 
-        self.consume(TokenType.END)
-        return statements
+        # self.consume(TokenType.END)
+        return BlockStatement(statements)
 
     def declaration(self):
         if self.match(TokenType.LOCAL):

@@ -40,6 +40,12 @@ class Resolver:
         scope = self.scopes[-1]
         scope[name.value] = True
 
+    def begin_scope(self):
+        self.scopes.append({})
+
+    def end_scope(self):
+        self.scopes.pop()
+
     def visit_variable_stmt(self, stmt):
         self.declare(stmt.name)
 
@@ -75,6 +81,12 @@ class Resolver:
             self.resolve_stmt(stmt.else_branch)
         return None
     
+    def visit_block_stmt(self, stmt):
+        self.begin_scope()
+        self.resolve(stmt.statements)
+        self.end_scope()
+        return None
+
     def visit_binary_expr(self, expr):
         self.resolve_expr(expr.left)
         self.resolve_expr(expr.right)

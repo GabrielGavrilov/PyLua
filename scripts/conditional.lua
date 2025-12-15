@@ -1,4 +1,4 @@
-local age = 21
+local age = 16
 
 if age > 18 then
     print("You are an adult.")

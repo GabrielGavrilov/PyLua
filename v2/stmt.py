@@ -14,6 +14,10 @@ class StmtVisitor(ABC):
         pass
 
     @abstractmethod
+    def visit_block_stmt(self, stmt):
+        pass
+
+    @abstractmethod
     def visit_if_stmt(self, expr):
         pass
 
@@ -80,3 +84,13 @@ class FunctionStatement(Stmt):
 
     def __repr__(self):
         return f"(FUNCTION STATEMENT {self.name.value} PARAMS {self.params} BODY {self.body})"
+    
+class BlockStatement(Stmt):
+    def __init__(self, statements):
+        self.statements = statements
+
+    def accept(self, visitor):
+        return visitor.visit_block_stmt(self)
+
+    def __repr__(self):
+        return f"(BLOCK STATEMENTS {self.statements})"
