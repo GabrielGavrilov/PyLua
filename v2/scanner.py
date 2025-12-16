@@ -94,6 +94,9 @@ class Scanner:
             elif self.curr_char == '<':
                 token = Token(TokenType.LT, '<')
 
+            elif self.curr_char == ',':
+                token = Token(TokenType.COMMA, ',')
+
             elif self.curr_char == '\"':
                 token = self.scan_string()
 

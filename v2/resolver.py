@@ -54,11 +54,32 @@ class Resolver:
 
         self.define(stmt.name)
         return None
+    
+    def visit_function_stmt(self, stmt):
+        self.declare(stmt.name)
+        self.define(stmt.name)
+
+        self.resolve_function(stmt, FunctionType.FUNCTION)
+        return None
+
+    def resolve_function(self, function, type):
+        enclosing_function = self.current_function
+        self.current_function = type
+
+        self.begin_scope()
+        
+        for param in function.params:
+            self.declare(param)
+            self.define(param)
+
+        self.resolve(function.body.statements)
+        self.end_scope()
+        self.current_function = enclosing_function
 
     def visit_variable_expr(self, expr):
         if self.scopes:
             scope = self.scopes[-1]
-            if not len(self.scopes) == 0 and scope[expr.name.value] == False:
+            if expr.name.value in scope and scope[expr.name.value] is False:
                 sys.exit("Can't read local variable in its own initializer.")
 
         self.resolve_local(expr, expr.name)
@@ -69,6 +90,10 @@ class Resolver:
             if name.value in self.scopes[i]:
                 self.interpeter.resolve(expr, len(self.scopes) - 1 - i)
                 return
+            
+    def visit_expression_stmt(self, stmt):
+        self.resolve_expr(stmt.expr)
+        return None
 
     def visit_print_stmt(self, stmt):
         self.resolve_expr(stmt.expr)
@@ -93,4 +118,12 @@ class Resolver:
         return None
     
     def visit_literal_expr(self, expr):
+        return None
+    
+    def visit_call_expr(self, expr):
+        self.resolve_expr(expr.callee)
+
+        for arg in expr.arguments:
+            self.resolve_expr(arg)
+
         return None

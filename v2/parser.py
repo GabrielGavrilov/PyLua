@@ -88,8 +88,16 @@ class Parser:
         self.consume(TokenType.LEFT_PAREN)
         params = []
 
+        if not self.check(TokenType.RIGHT_PAREN):
+            while True:
+                params.append(self.consume(TokenType.IDENTIFIER))
+                if not self.match(TokenType.COMMA):
+                    break
+
         self.consume(TokenType.RIGHT_PAREN)
-        body = self.block_statements()
+        body = self.block_statements([TokenType.END])
+
+        self.consume(TokenType.END)
         return FunctionStatement(name, params, body)
 
     def block_statements(self, terminators):
@@ -166,8 +174,13 @@ class Parser:
     def finish_call(self, callee):
         arguments = []
 
-        paren = self.consume(TokenType.RIGHT_PAREN)
+        if not self.check(TokenType.RIGHT_PAREN):
+            while True:
+                arguments.append(self.expression())
+                if not self.match(TokenType.COMMA):
+                    break
 
+        paren = self.consume(TokenType.RIGHT_PAREN)
         return CallExpression(callee, paren, arguments)
 
     def call(self):

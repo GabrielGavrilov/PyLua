@@ -1,5 +1,5 @@
-from environment import Environment
-from Return import Return
+from .environment import Environment
+from .Return import Return
 
 class Function:
     def __init__(self, declaration, closure, is_initializer):
@@ -13,7 +13,7 @@ class Function:
         return Function(self.declaration, environment, self.is_initializer)
     
     def arity(self):
-        len(self.declaration.params)
+        return len(self.declaration.params)
 
     def call(self, interpreter, arguments):
         environment = Environment(self.closure)
@@ -23,7 +23,7 @@ class Function:
             environment.define(arg_name, arguments[i])
 
         try:
-            interpreter.execute_blocK(self.declaration.body, environment)
+            interpreter.execute_block(self.declaration.body.statements, environment)
         
         except Return as return_value:
             if self.is_initializer:

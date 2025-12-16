@@ -10,6 +10,7 @@ class TokenType(Enum):
     EQUAL_EQUAL = auto()
     GT = auto(),
     LT = auto(),
+    COMMA = auto()
 
     PLUS = auto(),
     MINUS = auto(),

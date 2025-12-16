@@ -1,7 +1,9 @@
+import sys
 from .stmt import *
 from .expr import *
 from .token import TokenType
 from .environment import Environment
+from .function import Function
 
 class Interpreter:
     def __init__(self):
@@ -57,6 +59,20 @@ class Interpreter:
         else:
             return self.globals.get(name)
 
+    def visit_call_expr(self, expr):
+        callee = self.evaluate(expr.callee)
+        args = []
+
+        for arg in expr.arguments:
+            args.append(self.evaluate(arg))
+
+        function = callee
+
+        if len(args) != function.arity():
+            sys.exit(f"Expected {function.arity()} arguments but got {len(args)}.")
+
+        return function.call(self, args)
+
     def visit_expression_stmt(self, stmt):
         self.evaluate(stmt.expr)
 
@@ -87,3 +103,8 @@ class Interpreter:
     def visit_block_stmt(self, stmt):
         self.execute_block(stmt.statements, Environment(self.environment))
         None
+
+    def visit_function_stmt(self, stmt):
+        function = Function(stmt, self.environment, False)
+        self.environment.define(stmt.name.value, function)
+        return None

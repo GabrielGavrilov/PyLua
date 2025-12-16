@@ -1,4 +1,4 @@
-from instance import Instance
+from .instance import Instance
 
 class LuaClass:
     def __init__(self, name, superclass, methods):

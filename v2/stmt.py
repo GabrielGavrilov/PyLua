@@ -74,7 +74,7 @@ class IfStatement(Stmt):
         return f"(IF STATEMENT {self.condition} THEN {self.then_branch} ELSE {self.else_branch})"
 
 class FunctionStatement(Stmt):
-    def __init__(self, name, params = [], body = []):
+    def __init__(self, name, params, body):
         self.name = name
         self.params = params
         self.body = body
