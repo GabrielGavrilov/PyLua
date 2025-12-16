@@ -14,7 +14,7 @@ if __name__ == "__main__":
     parser = Parser(scanner.scan())
 
     ast = parser.parse()
-    # print(ast)
+    print(ast)
 
     interpeter = Interpreter()
     resolver = Resolver(interpeter)

@@ -1,25 +1,25 @@
 from enum import Enum, auto
 
 class TokenType(Enum):
-    EOF = auto(),
-    NEWLINE = auto(),
+    EOF = auto()
+    NEWLINE = auto()
 
-    LEFT_PAREN = auto(),
-    RIGHT_PAREN = auto(),
-    EQUAL = auto(),
+    LEFT_PAREN = auto()
+    RIGHT_PAREN = auto()
+    EQUAL = auto()
     EQUAL_EQUAL = auto()
-    GT = auto(),
-    LT = auto(),
+    GT = auto()
+    LT = auto()
     COMMA = auto()
 
-    PLUS = auto(),
-    MINUS = auto(),
-    MULTIPLY = auto(),
-    DIVIDE = auto(),
+    PLUS = auto()
+    MINUS = auto()
+    MULTIPLY = auto()
+    DIVIDE = auto()
 
-    IDENTIFIER = auto(),
-    STRING = auto(),
-    NUMBER = auto(),
+    IDENTIFIER = auto()
+    STRING = auto()
+    NUMBER = auto()
 
     LOCAL = auto()
     PRINT = auto()
@@ -28,6 +28,8 @@ class TokenType(Enum):
     ELSE = auto()
     END = auto()
     FUNCTION = auto()
+    DO = auto()
+    RETURN = auto()
 
 class Token: 
     def __init__(self, type, value):

@@ -4,6 +4,7 @@ from .expr import *
 from .token import TokenType
 from .environment import Environment
 from .function import Function
+from .Return import Return
 
 class Interpreter:
     def __init__(self):
@@ -43,6 +44,10 @@ class Interpreter:
 
         if expr.operator.type is TokenType.GT:
             return left > right
+        
+        if expr.operator.type is TokenType.LT:
+            return left < right
+
         if expr.operator.type is TokenType.MINUS:
             return left - right
         if expr.operator.type is TokenType.PLUS:
@@ -108,3 +113,9 @@ class Interpreter:
         function = Function(stmt, self.environment, False)
         self.environment.define(stmt.name.value, function)
         return None
+    
+    def visit_return_stmt(self, stmt):
+        value = None
+        if stmt.value is not None:
+            value = self.evaluate(stmt.value)
+        raise Return(value)

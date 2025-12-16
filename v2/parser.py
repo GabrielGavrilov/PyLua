@@ -73,6 +73,11 @@ class Parser:
         self.consume(TokenType.END)
         return IfStatement(condition, then_branch, else_branch)
 
+    def return_statement(self):
+        keyword = self.previous()
+        value = self.expression()
+
+        return ReturnStatement(keyword, value)
     
     def local_declaration(self):
         name = self.consume(TokenType.IDENTIFIER)
@@ -125,6 +130,9 @@ class Parser:
         if self.match(TokenType.IF):
             return self.if_statement()
 
+        if self.match(TokenType.RETURN):
+            return self.return_statement()
+
         return self.expression_statement()
     
     def expression_statement(self):
@@ -150,6 +158,11 @@ class Parser:
         expr = self.term()
 
         if self.match(TokenType.GT):
+            operator = self.previous()
+            right = self.term()
+            expr = Binary(expr, operator, right)
+
+        if self.match(TokenType.LT):
             operator = self.previous()
             right = self.term()
             expr = Binary(expr, operator, right)

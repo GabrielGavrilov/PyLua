@@ -112,6 +112,18 @@ class Resolver:
         self.end_scope()
         return None
 
+    def visit_return_stmt(self, stmt):
+        if self.current_function is FunctionType.NONE:
+            sys.exit("Can't return from outside a function")
+
+        if stmt.value is not None:
+            if self.current_function is FunctionType.INITIALIZER:
+                sys.exit("Can't return a value from an initializer")
+            
+            self.resolve_expr(stmt.value)
+        
+        return None
+
     def visit_binary_expr(self, expr):
         self.resolve_expr(expr.left)
         self.resolve_expr(expr.right)
