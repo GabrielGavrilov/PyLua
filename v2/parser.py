@@ -174,12 +174,12 @@ class Parser:
 
         if self.match(TokenType.PLUS):
             operator = self.previous()
-            right = self.primary()
+            right = self.call()
             expr = Binary(expr, operator, right)
 
         if self.match(TokenType.MINUS):
             operator = self.previous()
-            right = self.primary()
+            right = self.call()
             expr = Binary(expr, operator, right)
 
         return expr
