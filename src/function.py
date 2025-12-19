@@ -1,7 +1,8 @@
-from .environment import Environment
-from .Return import Return
+from environment import Environment
+from Return import Return
+from callable import Callable
 
-class Function:
+class Function(Callable):
     def __init__(self, declaration, closure, is_initializer):
         self.declaration = declaration
         self.closure = closure

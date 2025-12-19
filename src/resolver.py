@@ -124,6 +124,11 @@ class Resolver:
         
         return None
 
+    def visit_while_stmt(self, stmt):
+        self.resolve_expr(stmt.condition)
+        self.resolve_stmt(stmt.body)
+        return None
+
     def visit_binary_expr(self, expr):
         self.resolve_expr(expr.left)
         self.resolve_expr(expr.right)
@@ -138,4 +143,9 @@ class Resolver:
         for arg in expr.arguments:
             self.resolve_expr(arg)
 
+        return None
+    
+    def visit_assign_expr(self, expr):
+        self.resolve_expr(expr.value)
+        self.resolve_local(expr, expr.name)
         return None

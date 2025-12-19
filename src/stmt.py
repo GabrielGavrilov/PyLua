@@ -29,6 +29,10 @@ class StmtVisitor(ABC):
     def visit_return_stmt(self, stmt):
         pass
 
+    @abstractmethod
+    def visit_while_stmt(self, stmt):
+        pass
+
 class Stmt(ABC):
     @abstractmethod
     def accept(self, visitor):
@@ -109,3 +113,14 @@ class ReturnStatement(Stmt):
     
     def __repr__(self):
         return f"(RETURN STATEMENT {self.keyword.value} VALUE {self.value})"
+    
+class WhileStatement(Stmt):
+    def __init__(self, condition, body):
+        self.condition = condition
+        self.body = body
+
+    def accept(self, visitor):
+        return visitor.visit_while_stmt(self)
+    
+    def __repr__(self):
+        return f"(WHITE STATEMENT {self.condition} BODY {self.body})"

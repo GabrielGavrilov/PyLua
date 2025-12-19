@@ -1,10 +1,10 @@
 import sys
-from .stmt import *
-from .expr import *
-from .token import TokenType
-from .environment import Environment
-from .function import Function
-from .Return import Return
+from stmt import *
+from expr import *
+from token import TokenType
+from environment import Environment
+from function import Function
+from Return import Return
 
 class Interpreter:
     def __init__(self):
@@ -119,3 +119,19 @@ class Interpreter:
         if stmt.value is not None:
             value = self.evaluate(stmt.value)
         raise Return(value)
+    
+    def visit_while_stmt(self, stmt):
+        while self.evaluate(stmt.condition):
+            self.execute(stmt.body)
+        return None
+    
+    def visit_assign_expr(self, expr):
+        value = self.evaluate(expr.value)
+        distance = self.locals.get(expr)
+
+        if distance is not None:
+            self.environment.assign_at(distance, expr.name, value)
+        else:
+            self.globals.assign(expr.name, value)
+
+        return value

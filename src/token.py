@@ -30,6 +30,7 @@ class TokenType(Enum):
     FUNCTION = auto()
     DO = auto()
     RETURN = auto()
+    WHILE = auto()
 
 class Token: 
     def __init__(self, type, value):

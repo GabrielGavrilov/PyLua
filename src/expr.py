@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from .token import Token
+from token import Token
 
 class ExprVisitor(ABC):
     @abstractmethod
@@ -16,6 +16,10 @@ class ExprVisitor(ABC):
 
     @abstractmethod
     def visit_call_expr(self, expr):
+        pass
+
+    @abstractmethod
+    def visit_assign_expr(self, expr):
         pass
 
 class Expr(ABC):
@@ -66,3 +70,14 @@ class CallExpression(Expr):
     
     def __repr__(self):
         return f"(CALL EXPR {self.callee} PAREN {self.paren} ARGUMENTS {self.arguments})"
+    
+class AssignExpression(Expr):
+    def __init__(self, name, value):
+        self.name = name
+        self.value = value
+
+    def accept(self, visitor):
+        return visitor.visit_assign_expr(self)
+    
+    def __repr__(self):
+        return f"(ASSIGN EXPR {self.name.value} VALUE {self.value})"

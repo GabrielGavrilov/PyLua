@@ -1,8 +1,8 @@
 import sys
-from .token import Token, TokenType
-from .scanner import Scanner
-from .stmt import *
-from .expr import *
+from token import Token, TokenType
+from scanner import Scanner
+from stmt import *
+from expr import *
 
 class Parser:
     def __init__(self, tokens):
@@ -79,6 +79,14 @@ class Parser:
 
         return ReturnStatement(keyword, value)
     
+    def while_statement(self):
+        condition = self.expression()
+        self.consume(TokenType.DO)
+        body = self.block_statements([TokenType.END])
+        self.consume(TokenType.END)
+
+        return WhileStatement(condition, body)
+    
     def local_declaration(self):
         name = self.consume(TokenType.IDENTIFIER)
 
@@ -132,6 +140,9 @@ class Parser:
 
         if self.match(TokenType.RETURN):
             return self.return_statement()
+        
+        if self.match(TokenType.WHILE):
+            return self.while_statement()
 
         return self.expression_statement()
     
@@ -143,7 +154,14 @@ class Parser:
         return self.assignment()
     
     def assignment(self):
-        return self.or_assignment()
+        expr = self.or_assignment()
+
+        if self.match(TokenType.EQUAL):
+            value = self.assignment()
+            name = expr.name
+            return AssignExpression(name, value)
+
+        return expr
 
     def or_assignment(self):
         return self.and_assignment()
