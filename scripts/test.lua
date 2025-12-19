@@ -1,1 +1,2 @@
-print(add(5, 3))
+local res = http.get("http://example.com")
+print(res)
