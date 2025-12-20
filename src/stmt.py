@@ -123,4 +123,4 @@ class WhileStatement(Stmt):
         return visitor.visit_while_stmt(self)
     
     def __repr__(self):
-        return f"(WHITE STATEMENT {self.condition} BODY {self.body})"
+        return f"(WHILE STATEMENT {self.condition} BODY {self.body})"

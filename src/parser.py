@@ -87,6 +87,23 @@ class Parser:
 
         return WhileStatement(condition, body)
     
+    def for_statement(self):
+        initializer = self.local_declaration()
+        self.consume(TokenType.COMMA)
+        condition = self.expression()
+        self.consume(TokenType.COMMA)
+        increment = self.expression()
+        
+        self.consume(TokenType.DO)
+        body = self.block_statements([TokenType.END])
+
+        body = BlockStatement(body.statements + [Expression(increment)])
+        body = WhileStatement(condition, body)
+        body = BlockStatement([initializer, body])
+        
+        self.consume(TokenType.END)
+        return body
+    
     def local_declaration(self):
         name = self.consume(TokenType.IDENTIFIER)
 
@@ -143,6 +160,9 @@ class Parser:
         
         if self.match(TokenType.WHILE):
             return self.while_statement()
+        
+        if self.match(TokenType.FOR):
+            return self.for_statement()
 
         return self.expression_statement()
     

@@ -5,6 +5,7 @@ from parser import Parser
 from interpreter import Interpreter
 from resolver import Resolver
 from callable import Callable
+import time
 
 class Test(Callable):
     def arity(self):
@@ -14,7 +15,6 @@ class Test(Callable):
         return arguments[0] + arguments[1]
 
 if __name__ == "__main__":
-
     with open(sys.argv[1]) as f:
         src = f.read()
 
@@ -22,7 +22,7 @@ if __name__ == "__main__":
     parser = Parser(scanner.scan())
 
     ast = parser.parse()
-    # print(ast)
+    #print(ast)
 
     interpeter = Interpreter()
     resolver = Resolver(interpeter)
@@ -32,3 +32,4 @@ if __name__ == "__main__":
     interpeter.globals.define("add", Test())
 
     interpeter.interpret(ast)
+    end = int(time.time() * 1000)
